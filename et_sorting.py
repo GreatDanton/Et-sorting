@@ -27,6 +27,8 @@ for player in players:
 
 # printing descending list of players and their stats
 sortedList = sorted(sortedList, key=lambda x: x[3], reverse=True)
+print("")
+print("Ratings: ")
 for player in sortedList:
 # prints players name and rating
     print("{:15}{:<5}".format(player[0]+": ", player[3]))
@@ -54,7 +56,7 @@ for player in sortedList:
 print("")
 print("{:15}{:<6.3f}".format("axis score:", axis_score))
 print("{:15}{:<6.3f}".format("allies score:", allies_score))
-print("difference: " + str(axis_score-allies_score) + " for axis")
+print("{:14}{:<6}".format("difference:", str(axis_score-allies_score) + " for axis"))
 print("")
 
 # since the output of the shuffle with same players is always the same

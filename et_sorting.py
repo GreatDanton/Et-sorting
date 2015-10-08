@@ -4,6 +4,12 @@ import random
 # sorting players into teams based on prw and k/d
 # TODO:
 # add more players for testing
+# add usefulness factor for campers
+
+# sorting algorithm is fair right now but to make it even better we could add
+# usefulness factor  (for campers only) => rating = rating* 0.7
+# this will make sure that useless ppl like smithay are rated fair, while
+# others are not affected.
 
 playersList = {1: ['Freak', 1.9, 0.9, 0.9],2: ['Macka', 3.4, 0.8, 0.8], \
  3: ['GreatDanton', 1.69, 0.67, 0.67], 4: ['Smithay', 3.9, 0.45, 0.45], \
@@ -15,11 +21,10 @@ playersList = {1: ['Freak', 1.9, 0.9, 0.9],2: ['Macka', 3.4, 0.8, 0.8], \
  15: ['death', 2.275, 0.564, 0.564], 16: ['Noxious', 2.916, 0.638, 0.638], \
  17: ['Greenfire', 3.385, 0.652, 0.652], 18: ['Noix', 1.204, 0.689, 0.689], \
  18: ['Ak/47', 1.350, 0.499, 0.499], 19: ['Stumpel', 0.692, 0.441, 0.441], \
- 19: ['kdshp', 0.415, 0.333, 0.333]}
+ 20: ['kdshp', 0.415, 0.333, 0.333]}
 
 #greedy_sorting algorithm
 def greedy_sorting(sortedList):
-
 # sorting players into teams using greedy sorting
     axis = []
     allies = []
@@ -55,19 +60,20 @@ def greedy_sorting(sortedList):
         allies = temp
         print("Axis: ")
         for player in axis:
-            print("{:15}{:<6}".format(player[0], player[3]))
+            print("{:15}{:<6.3f}".format(player[0], player[3]))
         print("")
         print("Allies: ")
         for player in allies:
-            print("{:15}{:<6}".format(player[0], player[3]))
+            print("{:15}{:<6.3f}".format(player[0], player[3]))
     else:
         print("Axis: ")
         for player in axis:
-            print("{:15}{:<6}".format(player[0], player[3]))
+            print("{:15}{:<6.3f}".format(player[0], player[3]))
         print("")
         print("Allies: ")
         for player in allies:
-            print("{:15}{:<6}".format(player[0], player[3]))
+            print("{:15}{:<6.3f}".format(player[0], player[3]))
+
 
 # sorting all players:
 def sort(players):
@@ -76,7 +82,6 @@ def sort(players):
     for player in players:
 # calculating rating of the player
         rating = players[player][1]*0.05+players[player][2]*0.95
-
         players[player][3] = float("%.4f" % rating)
         sortedList.append(players[player])
 # printing descending list of players and their stats
@@ -87,8 +92,9 @@ def sort(players):
     for player in sortedList:
 # prints players name and rating
         print("{:15}{:<5}".format(player[0]+": ", player[3]))
+# greedy sorting
+    greedy_sorting(sortedList)
 
-    return(greedy_sorting(sortedList))
 
 # randomly picks players from the playersList, sort it and split into teams
 def test(players):
@@ -106,7 +112,6 @@ def test(players):
                 numbers_list.append(player)
                 break
         sortedList.append(playersList[player])
-
     print(len(sortedList))
 
 # add rating to each player 
@@ -115,9 +120,23 @@ def test(players):
         player[3] = rating
 
     sortedList = sorted(sortedList, key=lambda x: x[3], reverse=True)
-#    return(rating(sortedList))
-    return(greedy_sorting(sortedList))
+# greedy sorting:
+    greedy_sorting(sortedList)
+
+def kd_sort(players):
+    sortedList = []
+    print("")
+    print("")
+    print("K/D sort: ")
+    for player in players:
+        rating = players[player][1]
+        players[player][3] = float("%.4f" % rating)
+        sortedList.append(players[player])
+
+    sortedList = sorted(sortedList, key=lambda x: x[3], reverse=True)
+    greedy_sorting(sortedList)
 
 # run
+#kd_sort(playersList)
 test(playersList)
 #sort(playersList)

@@ -23,7 +23,7 @@ playersList = {1: ['Freak', 1.9, 0.9, 0.9],2: ['Macka', 3.4, 0.8, 0.8], \
  18: ['Ak/47', 1.350, 0.499, 0.499], 19: ['Stumpel', 0.692, 0.441, 0.441], \
  20: ['kdshp', 0.415, 0.333, 0.333]}
 
-#greedy_sorting algorithm
+# greedy_sorting algorithm
 def greedy_sorting(sortedList):
 # sorting players into teams using greedy sorting
     axis = []

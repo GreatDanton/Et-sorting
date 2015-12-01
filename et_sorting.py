@@ -152,6 +152,7 @@ def balance(players):
     random_players = []
     print("")
 
+# Make unbalanced teams
 # choose number of the random player in axis to be moved
     while len(random_players) < 2:
         random_number = random.randint(0,len(axis)-1)
@@ -197,6 +198,7 @@ def balance(players):
         temp_difference = [temp_axis_rating - temp_allies_rating, possibility[0], possibility[1], turn]
         differences.append(temp_difference)
 
+# making teams balanced:
 # check which possibilty has the lowest difference in team ratings
     min_value = float(abs(differences[0][0]))
     for value in differences:

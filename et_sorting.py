@@ -233,7 +233,13 @@ def balance(players):
 
         weaker_team = sorted(weaker_team, key=lambda x: x[3], reverse=True)
         stronger_team = sorted(stronger_team, key=lambda x: x[3], reverse=True)
-
+        weaker_score = 0
+        stronger_score = 0
+        for player in weaker_team:
+            weaker_score += player[3]
+        for player in stronger_team:
+            stronger_score +=player[3]
+        print("ACTUAL SCORE COMPARE IT WITH THE SCORE BELOW: " + str(stronger_score-weaker_score))
  # pretty output
     print("")
     print("")

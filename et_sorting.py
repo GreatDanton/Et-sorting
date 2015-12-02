@@ -58,19 +58,19 @@ def greedy_sorting(sortedList):
         temp = axis
         axis = allies
         allies = temp
-        print("Axis: ")
+        print("Axis: " + "(" + str(len(axis)) + ")" )
         for player in axis:
             print("{:15}{:<6.3f}".format(player[0], player[3]))
         print("")
-        print("Allies: ")
+        print("Allies: " + "(" + str(len(allies)) + ")" )
         for player in allies:
             print("{:15}{:<6.3f}".format(player[0], player[3]))
     else:
-        print("Axis: ")
+        print("Axis: " + "(" + str(len(axis)) + ")" ) 
         for player in axis:
             print("{:15}{:<6.3f}".format(player[0], player[3]))
         print("")
-        print("Allies: ")
+        print("Allies: " + "(" + str(len(allies)) + ")" )
         for player in allies:
             print("{:15}{:<6.3f}".format(player[0], player[3]))
 
@@ -151,92 +151,106 @@ def balance(players):
     allies_rating = greedy_sorting.allies_rating
     random_players = []
     print("")
-
+    removed_axis = []
 # Make unbalanced teams
 # choose number of the random player in axis to be moved
-    while len(random_players) < 2:
+    while len(random_players) < random.randint(1, 4):
         random_number = random.randint(0,len(axis)-1)
         if random_number not in random_players:
             random_players.append(random_number)
+    print(random_players)
+    for player in random_players:
+        allies.append(axis[player])
+        allies_rating += axis[player][3]
+        axis_rating -= axis[player][3]
+        removed_axis.append(axis[player])
 
-    first_player = axis[random_players[0]]
-    second_player = axis[random_players[1]]
-
-# append those two players to allies and remove them from axis team
-    allies.append(first_player)
-    allies.append(second_player)
-    axis.remove(first_player)
-    axis.remove(second_player)
-    allies_rating += first_player[3] + second_player[3]
-    axis_rating -= (first_player[3] + second_player[3])
+# remove chosen players from axis to make teams uneven
+    axis = [player for player in axis if player not in removed_axis]
 
 # pretty output
     print("")
     print("UNBALANCED TEAMS")
     print("")
 
-    print("Axis: ")
+    print("Axis: " + "(" + str(len(axis)) + ")")
     for player in axis:
         print("{:15}{:<6.3f}".format(player[0], player[3]))
     print("")
-    print("Allies: ")
+    print("Allies: " + "(" + str(len(allies)) + ")")
     for player in allies:
         print("{:15}{:<6.3f}".format(player[0], player[3]))
     
     print("") 
     print("Difference: " + str(axis_rating-allies_rating) + " for axis")
 
-    differences = []
-
 # permutations
-    all_possibilities = list(itertools.permutations(allies, 2))
-    turn = -1 
-    for possibility in all_possibilities:
-        turn = turn + 1
-        temp_allies_rating = allies_rating - (possibility[0][3] + possibility[1][3])
-        temp_axis_rating = axis_rating + (possibility[0][3] + possibility[1][3])
-        temp_difference = [temp_axis_rating - temp_allies_rating, possibility[0], possibility[1], turn]
-        differences.append(temp_difference)
+    number_of_moved_players = abs(len(axis) - len(allies)) // 2
+    print("Move this amount to axis: " + str(number_of_moved_players))
 
-# making teams balanced:
-# check which possibilty has the lowest difference in team ratings
-    min_value = float(abs(differences[0][0]))
-    for value in differences:
-        first_value = value[0]
-        if abs(first_value) < min_value:
-            min_value = first_value
-            iteration = value
+    if number_of_moved_players > 0:
+        if len(axis) > len(allies):
+            stronger_team = axis
+            weaker_team = allies
+            stronger_team_rating = axis_rating
+            weaker_team_rating = allies_rating
+        else:
+            stronger_team = allies
+            weaker_team = axis
+            stronger_team_rating = allies_rating
+            weaker_team_rating = axis_rating
 
-    iteration_turn = iteration[3]
+        all_possibilities = list(itertools.permutations(stronger_team, number_of_moved_players))
+        turn = -1
+        differences = []
+        for possibility in all_possibilities:
+            turn = turn + 1
+            temp_weaker_team_rating = 0
+            temp_stronger_team_rating = 0
+            for i in range(len(possibility)):
+                temp_weaker_team_rating += (possibility[i][3])
+                temp_stronger_team_rating -= (possibility[i][3])
+            
+            difference = abs((stronger_team_rating + temp_stronger_team_rating) - (weaker_team_rating + temp_weaker_team_rating))
+            differences.append([difference, possibility, turn])
 
-# append/remove players from the iteration with lowest abs value of axis_rating - allies_rating    
-    axis.append(differences[iteration_turn][1])
-    axis.append(differences[iteration_turn][2])
-    allies.remove(differences[iteration_turn][1])
-    allies.remove(differences[iteration_turn][2])
-    allies_rating -= (differences[iteration_turn][1][3] + differences[iteration_turn][2][3])
-    axis_rating += (differences[iteration_turn][1][3] + differences[iteration_turn][2][3])
-# sort players in descending order for each team
-    allies = sorted(allies, key=lambda x: x[3], reverse=True)
-    axis = sorted(axis, key=lambda x: x[3], reverse=True)
+# get the smallest difference between the teams
+        min_value = float(abs(differences[0][0]))
+        iteration = differences[0]
+        iteration_turn = differences[0][2]
+        for value in differences:
+            first_value = value[0]
+            if abs(first_value) <= min_value:
+                min_value = first_value
+                iteration = value
+                iteration_turn = iteration[2]
+        print("")
 
-# pretty output
+# append / remove players into right team
+        for player in differences[iteration_turn][1]:
+            weaker_team.append(player)
+            stronger_team.remove(player)
+
+        weaker_team = sorted(weaker_team, key=lambda x: x[3], reverse=True)
+        stronger_team = sorted(stronger_team, key=lambda x: x[3], reverse=True)
+
+ # pretty output
     print("")
     print("")
 
     print("BALANCED TEAMS")
     print("")
 
-    print("Axis: ")
-    for player in axis:
+    print("Axis: " + "(" + str(len(axis)) + ")")
+    for player in stronger_team:
         print("{:15}{:<6.3f}".format(player[0], player[3]))
     print("")
-    print("Allies: ")
-    for player in allies:
+    print("Allies: " + "(" + str(len(allies)) + ")")
+    for player in weaker_team:
         print("{:15}{:<6.3f}".format(player[0], player[3]))
     
     print("") 
-    print("Difference: " + str(axis_rating-allies_rating) + " for axis")
+    print("Difference: " + str(differences[iteration_turn][0]) + " for axis")
 
     print("")
     print(100*"#")

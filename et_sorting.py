@@ -154,7 +154,7 @@ def balance(players):
     removed_axis = []
 # Make unbalanced teams
 # choose number of the random player in axis to be moved
-    while len(random_players) < random.randint(1, 4):
+    while len(random_players) < random.randint(2, 4):
         random_number = random.randint(0,len(axis)-1)
         if random_number not in random_players:
             random_players.append(random_number)
@@ -194,11 +194,13 @@ def balance(players):
             weaker_team = allies
             stronger_team_rating = axis_rating
             weaker_team_rating = allies_rating
+            team = 'a' 
         else:
             stronger_team = allies
             weaker_team = axis
             stronger_team_rating = allies_rating
             weaker_team_rating = axis_rating
+            team = 'b'
 
         all_possibilities = list(itertools.permutations(stronger_team, number_of_moved_players))
         turn = -1
@@ -241,6 +243,13 @@ def balance(players):
             stronger_score +=player[3]
         print("ACTUAL SCORE COMPARE IT WITH THE SCORE BELOW: " + str(stronger_score-weaker_score))
  # pretty output
+    if team == 'a':
+        axis = stronger_team
+        allies = weaker_team
+    else:
+        axis = weaker_team
+        allies = stronger_team
+        
     print("")
     print("")
 
@@ -248,11 +257,11 @@ def balance(players):
     print("")
 
     print("Axis: " + "(" + str(len(axis)) + ")")
-    for player in stronger_team:
+    for player in axis:
         print("{:15}{:<6.3f}".format(player[0], player[3]))
     print("")
     print("Allies: " + "(" + str(len(allies)) + ")")
-    for player in weaker_team:
+    for player in allies:
         print("{:15}{:<6.3f}".format(player[0], player[3]))
     
     print("") 

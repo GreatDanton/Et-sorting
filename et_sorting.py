@@ -246,9 +246,13 @@ def balance(players):
     if team == 'a':
         axis = stronger_team
         allies = weaker_team
+        axis_rating = stronger_score
+        allies_rating = weaker_score
     else:
         axis = weaker_team
         allies = stronger_team
+        axis_rating = stronger_score
+        allies_rating = weaker_score
         
     print("")
     print("")
